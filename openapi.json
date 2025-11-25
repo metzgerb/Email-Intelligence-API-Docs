@@ -1,15 +1,15 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "EmailNameCheck API",
-    "description": "EmailNameCheck API provides fast, deterministic scoring and validation for both email addresses and personal names. It analyzes full email quality, detects disposable or risky domains, identifies role-based and free-provider emails, evaluates name structure, flags profanity, and assigns fraud-risk scores. Ideal for signup forms, lead validation, fraud prevention, and marketing automation. Fully stateless, privacy-friendly, and built for high-volume production use.",
+    "title": "Email Intelligence API",
+    "description": "Email Inelligence API provides fast, deterministic scoring and validation for both email addresses and personal names. It analyzes full email quality, detects disposable or risky domains, identifies role-based and free-provider emails, evaluates name structure, flags profanity, and assigns fraud-risk scores. Ideal for signup forms, lead validation, fraud prevention, and marketing automation. Fully stateless, privacy-friendly, and built for high-volume production use.",
     "version": "v1.0.0"
   },
   "paths": {
     "/health": {
       "get": {
         "summary": "Health Check \u2014 API uptime & readiness",
-        "description": "Lightweight health endpoint returning API status and uptime. Designed for monitoring, load balancers, and service checks to verify availability of the EmailNameCheck REST API.",
+        "description": "Lightweight health endpoint returning API status and uptime. Designed for monitoring, load balancers, and service checks to verify availability of the Email Intelligence REST API.",
         "operationId": "health_check_health_get",
         "responses": {
           "200": {
