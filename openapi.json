@@ -1,0 +1,518 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "EmailNameCheck API",
+    "description": "EmailNameCheck API provides fast, deterministic scoring and validation for both email addresses and personal names. It analyzes full email quality, detects disposable or risky domains, identifies role-based and free-provider emails, evaluates name structure, flags profanity, and assigns fraud-risk scores. Ideal for signup forms, lead validation, fraud prevention, and marketing automation. Fully stateless, privacy-friendly, and built for high-volume production use.",
+    "version": "v1.0.0"
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "summary": "Health Check \u2014 API uptime & readiness",
+        "description": "Lightweight health endpoint returning API status and uptime. Designed for monitoring, load balancers, and service checks to verify availability of the EmailNameCheck REST API.",
+        "operationId": "health_check_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Health Check Health Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/email/validate": {
+      "post": {
+        "summary": "Real-time Email Validation \u2014 Syntax, MX, disposable detection & role-based checks",
+        "description": "Real-time email validation: syntax, MX/DNS checks, disposable and free-provider detection, role-account flags, and a clear risk reason. Ideal for signup quality, deliverability optimization, fraud prevention, and automated data-cleaning workflows.",
+        "operationId": "email_validate_email_validate_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmailValidationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmailValidationResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/email/score": {
+      "post": {
+        "summary": "Email Risk Scoring \u2014 Fraud & deliverability score (0\u2013100)",
+        "description": "Lightweight scoring endpoint ideal for ranking, gating, triage, or routing workflows where speed is critical.Returns an overall email quality and fraud-risk score with a human-readable label. Combines domain reputation, disposability, syntax and pattern signals for gating, routing, and prioritization in fraud prevention, onboarding, and marketing pipelines.",
+        "operationId": "email_score_email_score_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmailValidationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmailScoreResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/email/bulk": {
+      "post": {
+        "summary": "Bulk Email Validation & Scoring \u2014 High-volume deliverability checks, disposable detection, and risk scoring (up to 5,000 emails)",
+        "description": "Processes up to 5,000 email addresses in a single request using the complete validation and scoring engine. Each email is analyzed for syntax correctness, MX/DNS health, disposable or temporary domains, free-provider identification, role-based accounts, profanity indicators, structural anomalies, and an overall risk/quality score with clear reason codes.\n\nIdeal for lead verification, signup quality control, fraud prevention, email list cleaning, and deliverability optimization. Fully stateless, privacy-friendly, and optimized for parallel batch processing. Results are returned in the same order as the input array. The bulk endpoint is optimized for fast, stateless parallel processing and can handle thousands of emails efficiently in pipelines or worker queues.",
+        "operationId": "email_bulk_validate_email_bulk_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkEmailValidationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BulkEmailValidationResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/name/validate": {
+      "post": {
+        "summary": "Name Validation & Fake Detection \u2014 Authenticity and quality scoring",
+        "description": "Evaluate personal names for realism and quality: profanity, random tokens, repetition, and token-pattern issues. Provides validity flag, fake-likelihood (0\u20131), numeric confidence score, and actionable issue list for signup hygiene and identity verification. Uses deterministic heuristics (no ML, no storage) for consistent and privacy-safe name quality scoring.",
+        "operationId": "name_validate_name_validate_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NameRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NameValidationResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "BulkEmailValidationRequest": {
+        "properties": {
+          "emails": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Emails",
+            "description": "A list of email addresses to analyze and validate in bulk. This endpoint is optimized for high-volume batch processing and is ideal for email list cleaning, signup quality filtering, fraud prevention, and deliverability optimization. Each email is evaluated using full quality-scoring logic including syntax validation, MX checks, disposable domain detection, free vs paid provider identification, role-based analysis, profanity screening, and anomaly detection. Order of results matches input order for easy correlation.",
+            "examples": [
+              [
+                "JohnDoe@example.com",
+                "JaneSmith@example.com"
+              ]
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "emails"
+        ],
+        "title": "BulkEmailValidationRequest"
+      },
+      "BulkEmailValidationResponse": {
+        "properties": {
+          "results": {
+            "items": {
+              "$ref": "#/components/schemas/EmailValidationResponse"
+            },
+            "type": "array",
+            "title": "Bulk Email Validation Results",
+            "description": "Detailed validation output for each email address submitted in the bulk request. Each entry includes syntax analysis, MX record checks, disposable domain detection, role-based identification, free-provider detection, profanity screening, structural anomaly checks, and a normalized risk score with human-readable reason codes. Results are returned in the same order as the input list.",
+            "examples": [
+              [
+                {
+                  "disposable": false,
+                  "email": "johndoe@example.com",
+                  "free_provider": true,
+                  "has_mx": true,
+                  "reason": "valid_email",
+                  "risk_score": 12,
+                  "role_based": false,
+                  "valid_syntax": true
+                },
+                {
+                  "disposable": false,
+                  "email": "info@company.com",
+                  "free_provider": false,
+                  "has_mx": true,
+                  "reason": "role_based_address",
+                  "risk_score": 35,
+                  "role_based": true,
+                  "valid_syntax": true
+                },
+                {
+                  "disposable": true,
+                  "email": "tempuser@mailinator.com",
+                  "free_provider": false,
+                  "has_mx": true,
+                  "reason": "disposable_domain",
+                  "risk_score": 72,
+                  "role_based": false,
+                  "valid_syntax": true
+                },
+                {
+                  "disposable": false,
+                  "email": "asdjkl123@unknown-domain.xyz",
+                  "free_provider": false,
+                  "has_mx": false,
+                  "reason": "no_mx_records",
+                  "risk_score": 90,
+                  "role_based": false,
+                  "valid_syntax": true
+                }
+              ]
+            ]
+          },
+          "count": {
+            "type": "integer",
+            "title": "Processed Count",
+            "description": "The total number of email addresses successfully processed in this bulk request. This value always matches the length of the `\"results\"` array.",
+            "examples": [
+              4
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "results",
+          "count"
+        ],
+        "title": "BulkEmailValidationResponse"
+      },
+      "EmailScoreResponse": {
+        "properties": {
+          "risk_score": {
+            "type": "integer",
+            "title": "Risk Score",
+            "description": "Calculated risk score (0 low \u2014 100 high) based on combined email risk factors to support decisioning and workflows.",
+            "examples": [
+              0,
+              100
+            ]
+          },
+          "label": {
+            "type": "string",
+            "title": "Label",
+            "description": "Readable category for the score such as `valid_email`, `medium_risk`, `high_risk`, `invalid_format`, or `unknown` \u2014 great for UI badges and logs.",
+            "examples": [
+              "valid_email",
+              "medium_risk",
+              "high_risk",
+              "invalid_format",
+              "unknown"
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "risk_score",
+          "label"
+        ],
+        "title": "EmailScoreResponse"
+      },
+      "EmailValidationRequest": {
+        "properties": {
+          "email": {
+            "type": "string",
+            "title": "Email",
+            "description": "Enter the email address to analyze and validate \u2014 ideal for improving deliverability, reducing fraud, and cleaning user data.",
+            "examples": [
+              "JohnDoe@example.com"
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "email"
+        ],
+        "title": "EmailValidationRequest"
+      },
+      "EmailValidationResponse": {
+        "properties": {
+          "email": {
+            "type": "string",
+            "title": "Email",
+            "description": "Normalized, lowercase email address returned after validation \u2014 ready for safe storage and reliable comparisons.",
+            "examples": [
+              "johndoe@example.com"
+            ]
+          },
+          "valid_syntax": {
+            "type": "boolean",
+            "title": "Valid Syntax",
+            "description": "Confirms the address matches standard email format (RFC-compliant) \u2014 the first line of defense against malformed input."
+          },
+          "has_mx": {
+            "type": "boolean",
+            "title": "Has Mx",
+            "description": "Checks for Mail Exchange (MX) DNS records for the domain to assess deliverability and legitimacy \u2014 missing MX is a strong signal of non\u2011receiving domains."
+          },
+          "disposable": {
+            "type": "boolean",
+            "title": "Disposable",
+            "description": "Flags domains known to provide temporary or disposable inboxes \u2014 helps prevent throwaway accounts and abuse."
+          },
+          "role_based": {
+            "type": "boolean",
+            "title": "Role Based",
+            "description": "Detects generic role accounts (e.g., admin, support, no-reply) which often indicate lower engagement or system addresses."
+          },
+          "free_provider": {
+            "type": "boolean",
+            "title": "Free Provider",
+            "description": "Identifies common consumer free email providers (Gmail, Yahoo, Outlook) to help with segmentation and risk profiling."
+          },
+          "risk_score": {
+            "type": "integer",
+            "title": "Risk Score",
+            "description": "Aggregate risk score from 0 (low) to 100 (high) derived from validation checks \u2014 use for gating, prioritization, or automated workflows.",
+            "examples": [
+              0,
+              100
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "title": "Reason",
+            "description": "Human-readable label explaining the primary conclusion (e.g., `valid_email`, `medium_risk`, `high_risk`, `invalid_format`) for easy reporting and UI messaging.",
+            "examples": [
+              "valid_email",
+              "medium_risk",
+              "high_risk",
+              "invalid_format"
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "email",
+          "valid_syntax",
+          "has_mx",
+          "disposable",
+          "role_based",
+          "free_provider",
+          "risk_score",
+          "reason"
+        ],
+        "title": "EmailValidationResponse"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "NameRequest": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "Full name to validate \u2014 use for improving user data quality, identity checks, and fraud detection.",
+            "examples": [
+              "John Doe"
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "NameRequest"
+      },
+      "NameValidationResponse": {
+        "properties": {
+          "valid": {
+            "type": "boolean",
+            "title": "Valid",
+            "description": "Indicates whether the provided name passes heuristic and quality checks \u2014 useful for signup validation and risk assessment."
+          },
+          "fake_likelihood": {
+            "type": "number",
+            "title": "Fake Likelihood",
+            "description": "Probability from 0.0 to 1.0 that the name is synthetic or unlikely to be real \u2014 integrate into fraud scoring or review workflows.",
+            "examples": [
+              0.0,
+              1.0
+            ]
+          },
+          "score": {
+            "type": "integer",
+            "title": "Score",
+            "description": "Name quality score (0\u2013100) where higher values indicate stronger confidence the name is genuine.",
+            "examples": [
+              0,
+              100
+            ]
+          },
+          "issues": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Issues",
+            "description": "List of detected issues (e.g., `contains_numbers`, `contains_symbols`, `too_short`, `too_long`, `repetitive`, `offensive`, `single_token_short`) to provide actionable feedback or enforce policies.",
+            "examples": [
+              [
+                "contains_numbers",
+                "contains_symbols",
+                "too_short",
+                "too_long",
+                "repetitive",
+                "offensive",
+                "single_token_short"
+              ]
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "valid",
+          "fake_likelihood",
+          "score",
+          "issues"
+        ],
+        "title": "NameValidationResponse"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}
