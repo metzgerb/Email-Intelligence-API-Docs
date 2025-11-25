@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Email Intelligence API – Documentation</title>
-
+<link rel="icon" href="logo.png" type="image/png" />
 <style>
     /* ---------- BASE STYLES ---------- */
     :root {
@@ -142,11 +142,22 @@
         opacity: 0.7;
         font-size: 0.9rem;
     }
+    /* ---------- LOGO STYLES ---------- */
+    .logo {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%; /* makes the image circular */
+    background: rgba(255,255,255,0.03);
+    padding: 4px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+}
 </style>
 </head>
 <body>
 
 <header>
+    <img class="logo" src="logo.png" alt="Email Intelligence API logo" />
     <h1>Email Intelligence API</h1>
     <p class="subtitle">High-performance email validation & scoring API for developers.</p>
 
