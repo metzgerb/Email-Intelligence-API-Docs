@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📘 View Documentation
+    url: https://metzgerb.github.io/Email-Intelligence-API-Docs/
+    about: Full API documentation for the Email Intelligence API.
