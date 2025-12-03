@@ -11,38 +11,15 @@
         "summary": "Health Check \u2014 API uptime & readiness",
         "description": "Lightweight health endpoint returning API status and uptime. Designed for monitoring, load balancers, and service checks to verify availability of the Email Intelligence REST API.",
         "operationId": "health_check_health_get",
-        "parameters": [
-          {
-            "name": "X-RapidAPI-Proxy-Secret",
-            "in": "header",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "description": "RapidAPI Proxy Secret for authentication",
-              "title": "X-Rapidapi-Proxy-Secret"
-            },
-            "description": "RapidAPI Proxy Secret for authentication"
-          }
-        ],
         "responses": {
           "200": {
             "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
                   "additionalProperties": true,
+                  "type": "object",
                   "title": "Response Health Check Health Get"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
                 }
               }
             }
