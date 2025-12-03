@@ -11,15 +11,38 @@
         "summary": "Health Check \u2014 API uptime & readiness",
         "description": "Lightweight health endpoint returning API status and uptime. Designed for monitoring, load balancers, and service checks to verify availability of the Email Intelligence REST API.",
         "operationId": "health_check_health_get",
+        "parameters": [
+          {
+            "name": "X-RapidAPI-Proxy-Secret",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "RapidAPI Proxy Secret for authentication",
+              "title": "X-Rapidapi-Proxy-Secret"
+            },
+            "description": "RapidAPI Proxy Secret for authentication"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
-                  "additionalProperties": true,
                   "type": "object",
+                  "additionalProperties": true,
                   "title": "Response Health Check Health Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
                 }
               }
             }
@@ -32,15 +55,28 @@
         "summary": "Real-time Email Validation \u2014 Syntax, MX, disposable detection & role-based checks",
         "description": "Real-time email validation: syntax, MX/DNS checks, disposable and free-provider detection, role-account flags, and a clear risk reason. Ideal for signup quality, deliverability optimization, fraud prevention, and automated data-cleaning workflows.",
         "operationId": "email_validate_email_validate_post",
+        "parameters": [
+          {
+            "name": "X-RapidAPI-Proxy-Secret",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "RapidAPI Proxy Secret for authentication",
+              "title": "X-Rapidapi-Proxy-Secret"
+            },
+            "description": "RapidAPI Proxy Secret for authentication"
+          }
+        ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/EmailValidationRequest"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -71,15 +107,28 @@
         "summary": "Email Risk Scoring \u2014 Fraud & deliverability score (0\u2013100)",
         "description": "Lightweight scoring endpoint ideal for ranking, gating, triage, or routing workflows where speed is critical.Returns an overall email quality and fraud-risk score with a human-readable label. Combines domain reputation, disposability, syntax and pattern signals for gating, routing, and prioritization in fraud prevention, onboarding, and marketing pipelines.",
         "operationId": "email_score_email_score_post",
+        "parameters": [
+          {
+            "name": "X-RapidAPI-Proxy-Secret",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "RapidAPI Proxy Secret for authentication",
+              "title": "X-Rapidapi-Proxy-Secret"
+            },
+            "description": "RapidAPI Proxy Secret for authentication"
+          }
+        ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/EmailValidationRequest"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -110,15 +159,28 @@
         "summary": "Bulk Email Validation & Scoring \u2014 High-volume deliverability checks, disposable detection, and risk scoring (up to 5,000 emails)",
         "description": "Processes up to 5,000 email addresses in a single request using the complete validation and scoring engine. Each email is analyzed for syntax correctness, MX/DNS health, disposable or temporary domains, free-provider identification, role-based accounts, profanity indicators, structural anomalies, and an overall risk/quality score with clear reason codes.\n\nIdeal for lead verification, signup quality control, fraud prevention, email list cleaning, and deliverability optimization. Fully stateless, privacy-friendly, and optimized for parallel batch processing. Results are returned in the same order as the input array. The bulk endpoint is optimized for fast, stateless parallel processing and can handle thousands of emails efficiently in pipelines or worker queues.",
         "operationId": "email_bulk_validate_email_bulk_post",
+        "parameters": [
+          {
+            "name": "X-RapidAPI-Proxy-Secret",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "RapidAPI Proxy Secret for authentication",
+              "title": "X-Rapidapi-Proxy-Secret"
+            },
+            "description": "RapidAPI Proxy Secret for authentication"
+          }
+        ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/BulkEmailValidationRequest"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -149,15 +211,28 @@
         "summary": "Name Validation & Fake Detection \u2014 Authenticity and quality scoring",
         "description": "Evaluate personal names for realism and quality: profanity, random tokens, repetition, and token-pattern issues. Provides validity flag, fake-likelihood (0\u20131), numeric confidence score, and actionable issue list for signup hygiene and identity verification. Uses deterministic heuristics (no ML, no storage) for consistent and privacy-safe name quality scoring.",
         "operationId": "name_validate_name_validate_post",
+        "parameters": [
+          {
+            "name": "X-RapidAPI-Proxy-Secret",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "RapidAPI Proxy Secret for authentication",
+              "title": "X-Rapidapi-Proxy-Secret"
+            },
+            "description": "RapidAPI Proxy Secret for authentication"
+          }
+        ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/NameRequest"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
